@@ -40,7 +40,7 @@ h1{color:#f0883e;margin-bottom:10px;font-size:1.3em}
 </div>
 
 <div class="to">
-<b>To:</b> abuse@telegram.org | <b>CC:</b> grievance-in@telegram.org, durov@telegram.org, dsa.telegram@edsr.eu
+<b>To:</b> abuse@telegram.org, privacy@telegram.org
 </div>
 
 <div class="progress">
@@ -103,16 +103,15 @@ function sendNow() {
     const r = currentReport;
     const body = encodeURIComponent(r.body);
     const subject = encodeURIComponent(r.subject);
-    const to = encodeURIComponent('abuse@telegram.org');
-    const cc = encodeURIComponent('grievance-in@telegram.org, durov@telegram.org, dsa.telegram@edsr.eu');
-    window.open(`mailto:${to}?cc=${cc}&subject=${subject}&body=${body}`, '_blank');
+    const to = encodeURIComponent('abuse@telegram.org, privacy@telegram.org');
+    window.open(`mailto:${to}?subject=${subject}&body=${body}`, '_blank');
     markSent(r.id);
 }
 
 function copyReport() {
     if (!currentReport) return;
     const r = currentReport;
-    const text = 'To: abuse@telegram.org\nCC: grievance-in@telegram.org, durov@telegram.org, dsa.telegram@edsr.eu\nSubject: ' + r.subject + '\n\n' + r.body;
+    const text = 'To: abuse@telegram.org, privacy@telegram.org\nSubject: ' + r.subject + '\n\n' + r.body;
     navigator.clipboard.writeText(text).then(() => {
         alert('✅ Copied! Paste into Gmail.');
     });
