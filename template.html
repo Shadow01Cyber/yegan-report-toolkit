@@ -27,14 +27,6 @@ h1{color:#f0883e;margin-bottom:10px;font-size:1.3em}
 .timer{color:#8b949e;font-size:12px;text-align:center;margin-top:5px}
 .sent-log{max-height:150px;overflow-y:auto;margin-top:15px;border-top:1px solid #30363d;padding-top:10px}
 .sent-item{color:#8b949e;font-size:11px;padding:2px 0}
-.step-box{background:#161b22;border:2px solid #238636;border-radius:12px;padding:20px;margin:20px 0;text-align:center}
-.step-num{font-size:3em;color:#f0883e;font-weight:bold;margin-bottom:10px}
-.step-text{font-size:1.1em;color:#c9d1d9;line-height:2}
-.step-text b{color:#f0883e}
-.arrow{font-size:2em;color:#238636;margin:10px 0}
-.big-btn{display:inline-block;padding:18px 40px;border-radius:10px;border:none;font-family:monospace;font-size:18px;cursor:pointer;font-weight:bold;background:#238636;color:#fff;margin:15px 0}
-.big-btn:hover{background:#2ea043}
-.done{color:#3fb950;font-size:1.5em;text-align:center;margin:30px 0}
 </style>
 </head>
 <body>
@@ -57,30 +49,15 @@ Sent: <span id="sent-count">0</span> / 70
 </div>
 
 <div class="counter" id="counter">0</div>
-
-<div id="step-area">
-<div class="step-box" id="step-box">
-<div class="step-num" id="step-num">①</div>
-<div class="step-text">
-دکمه <b>باز کردن Gmail</b> رو بزن<br>
-<span class="arrow">⬇️</span><br>
-ایمیل آماده میشه<br>
-<span class="arrow">⬇️</span><br>
-دکمه <b>Send</b> رو بزن<br>
-<span class="arrow">⬇️</span><br>
-برگرد اینجا <b>مرحله بعد</b> رو بزن
-</div>
-</div>
-</div>
+<div class="timer" id="timer">Opening Gmail in <span id="countdown">5</span>s...</div>
 
 <div id="subject" class="subject"></div>
 <div id="email-body" class="email-body"></div>
 
 <div style="margin-top:15px;text-align:center">
-<button class="big-btn" onclick="openGmail()">📧 باز کردن Gmail</button>
-<br>
+<button class="btn send" onclick="sendNow()">📤 Send Now</button>
 <button class="btn copy" onclick="copyReport()">📋 Copy</button>
-<button class="btn skip" onclick="nextReport()">⏭ مرحله بعد</button>
+<button class="btn skip" onclick="nextReport()">⏭ Skip</button>
 </div>
 
 <div class="sent-log" id="sent-log"></div>
@@ -89,6 +66,8 @@ Sent: <span id="sent-count">0</span> / 70
 const REPORTS = REPORTS_PLACEHOLDER;
 let sent = JSON.parse(localStorage.getItem('yegan_sent_v3') || '[]');
 let currentReport = null;
+let countdownTimer = null;
+let countdownValue = 5;
 
 function pickNext() {
     const unsent = REPORTS.filter(r => !sent.includes(r.id));
@@ -101,15 +80,31 @@ function showReport(r) {
     document.getElementById('subject').textContent = 'Subject: ' + r.subject;
     document.getElementById('email-body').textContent = r.body;
     document.getElementById('counter').textContent = (sent.length + 1);
-    document.getElementById('step-num').textContent = '②';
+    startCountdown();
 }
 
-function openGmail() {
+function startCountdown() {
+    countdownValue = 5;
+    document.getElementById('countdown').textContent = countdownValue;
+    if (countdownTimer) clearInterval(countdownTimer);
+    countdownTimer = setInterval(() => {
+        countdownValue--;
+        document.getElementById('countdown').textContent = countdownValue;
+        if (countdownValue <= 0) {
+            clearInterval(countdownTimer);
+            sendNow();
+        }
+    }, 1000);
+}
+
+function sendNow() {
+    if (countdownTimer) clearInterval(countdownTimer);
     if (!currentReport) return;
     const r = currentReport;
     const to = 'abuse@telegram.org,privacy@telegram.org';
     const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(r.subject)}&body=${encodeURIComponent(r.body)}`;
     window.open(url, '_blank');
+    markSent(r.id);
 }
 
 function copyReport() {
@@ -122,6 +117,7 @@ function copyReport() {
 }
 
 function nextReport() {
+    if (countdownTimer) clearInterval(countdownTimer);
     if (currentReport) {
         markSent(currentReport.id);
     }
@@ -139,8 +135,8 @@ function markSent(id) {
     } else {
         document.getElementById('subject').textContent = '✅ ALL 70 REPORTS SENT';
         document.getElementById('email-body').textContent = 'Done! All reports have been sent.';
+        document.getElementById('timer').textContent = 'Complete';
         document.getElementById('counter').textContent = '70';
-        document.querySelector('.step-box').innerHTML = '<div class="done">✅ همه ۷۰ گزارش فرستاده شد!</div>';
     }
 }
 
@@ -160,8 +156,7 @@ const first = pickNext();
 if (first) showReport(first);
 else {
     document.getElementById('subject').textContent = '✅ ALL SENT';
-    document.getElementById('counter').textContent = '70';
-    document.querySelector('.step-box').innerHTML = '<div class="done">✅ همه ۷۰ گزارش فرستاده شد!</div>';
+    document.getElementById('timer').textContent = 'Complete';
 }
 </script>
 </body>
