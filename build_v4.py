@@ -307,7 +307,24 @@ for i in range(70):
             body += random.choice(rq_pool) + "\n\n"
     
     body += "Evidence links:\n" + links_text + "\n\n"
-    body += "I am trusting that someone at Telegram will read this and take action. The women affected by this channel deserve nothing less."
+    closing = [
+        "I am trusting that someone at Telegram will read this and take action. The women affected by this channel deserve nothing less.",
+        "I truly hope this email reaches a human being who understands the urgency. Please do not let this disappear into another automated response.",
+        "Every day that passes without action is another day a woman suffers. Please act on this before it is too late.",
+        "I have done everything I can to document this. Now it is in your hands. Please do the right thing.",
+        "If you take one thing from this email let it be this: real women are being destroyed and you have the power to stop it.",
+        "This is not just a report. It is a plea from someone who has seen the damage and cannot look away.",
+        "I will continue to report this channel until action is taken. I am asking you to please make this the last time I have to write.",
+        "The evidence speaks for itself. I am asking you to listen to it.",
+        "I am leaving this in your hands now. Please prove to me that Telegram still cares about its users.",
+        "The women in these photos trusted someone. That trust was betrayed. Please restore what little faith they have left in humanity.",
+        "I know your team receives thousands of reports. This one is different. A woman deleted her entire account out of fear. Please act.",
+        "I have spent hours gathering this evidence. Please spend five minutes reviewing it. That is all I am asking.",
+        "Someone at Telegram must review this. I am not going to stop until someone does.",
+        "This cannot continue. I will be following up on this report regularly until I see action.",
+        "Please do the right thing. The women who were targeted by this channel are counting on you.",
+    ]
+    body += random.choice(closing)
     
     reports.append({"id": i + 1, "subject": subjects[i], "body": body.strip()})
 
