@@ -268,6 +268,60 @@ transitions = [
 "The damage extends further:",
 ]
 
+closings = [
+    "I am trusting that someone at Telegram will read this and take action. The women affected by this channel deserve nothing less.",
+    "I truly hope this email reaches a human being who understands the urgency. Please do not let this disappear into another automated response.",
+    "Every day that passes without action is another day a woman suffers. Please act on this before it is too late.",
+    "I have done everything I can to document this. Now it is in your hands. Please do the right thing.",
+    "If you take one thing from this email let it be this: real women are being destroyed and you have the power to stop it.",
+    "This is not just a report. It is a plea from someone who has seen the damage and cannot look away.",
+    "I will continue to report this channel until action is taken. I am asking you to please make this the last time I have to write.",
+    "The evidence speaks for itself. I am asking you to listen to it.",
+    "I am leaving this in your hands now. Please prove to me that Telegram still cares about its users.",
+    "The women in these photos trusted someone. That trust was betrayed. Please restore what little faith they have left in humanity.",
+    "I know your team receives thousands of reports. This one is different. A woman deleted her entire account out of fear. Please act.",
+    "I have spent hours gathering this evidence. Please spend five minutes reviewing it. That is all I am asking.",
+    "Someone at Telegram must review this. I am not going to stop until someone does.",
+    "This cannot continue. I will be following up on this report regularly until I see action.",
+    "Please do the right thing. The women who were targeted by this channel are counting on you.",
+    "I am asking you personally as a human being to please stop this channel from continuing.",
+    "These women have nowhere else to turn. Telegram is their last hope. Please do not fail them.",
+    "I will be following up on this report weekly until I see concrete action taken against this channel.",
+    "The courage it took to write this email is nothing compared to the courage these women need every day.",
+    "I refuse to accept that nothing can be done. These women deserve justice and you have the power to help.",
+    "This channel does not deserve a second more of existence on your platform.",
+    "I am not going to stop reporting this until every woman targeted by this channel receives justice.",
+    "The world is watching and the women of your platform are suffering. Act now.",
+    "I have lost sleep over this. I have lost faith in your platform over this. Please restore it.",
+    "There is a woman somewhere right now wondering if anyone will help her. Let this be the answer.",
+    "I am just one person but I will keep writing until someone at Telegram listens.",
+    "The least you can do is look at what this channel has done. Just look.",
+    "I am pleading with you on behalf of every woman whose life this channel has ruined.",
+    "Do not let this email become another statistic. These women are real. Their pain is real.",
+    "If you read nothing else read the link with the woman begging for her photo to be removed. Then act.",
+    "I have done my part. Now it is your turn. Shut this channel down.",
+    "Every moment you delay is another moment a woman suffers because of your platform.",
+    "I chose to believe that someone at Telegram cares. Please prove me right.",
+    "The women who were hurt by this channel trusted your platform. Honor that trust.",
+    "I am not a technical person. I am just someone who saw something terrible and refuses to stay silent.",
+    "Close your eyes and imagine this was your sister your daughter your mother. Now act.",
+    "I have no power to stop this channel. You do. Please use it.",
+    "The silence from your platform is deafening. The victims deserve better.",
+    "I do not know who else to contact. You are the only ones who can stop this.",
+    "This email took me an hour to write because I had to stop and cry twice. This is real.",
+    "I have never been more certain about anything in my life. This channel must be destroyed.",
+    "The fact that this email exists is an indictment of your platforms failure to protect women.",
+    "I am choosing to believe this email will make a difference. Please do not prove me wrong.",
+    "Some things in this world are worth fighting for. These women are worth fighting for.",
+    "I am not sending this email because I want to. I am sending it because I have to.",
+    "I want to believe that the people who work at Telegram are good people. Please show me I am right.",
+    "This is my way of saying I did not look away. I saw what happened and I spoke up.",
+    "The women cannot speak for themselves anymore. So I am speaking for them.",
+    "I will keep writing these emails until this channel no longer exists on your platform.",
+    "I am tired. The victims are tired. But we cannot stop and neither can you.",
+    "This is not a one-time complaint. This is a commitment to see this through until action is taken.",
+]
+
 reports = []
 used_combos = set()
 
@@ -307,24 +361,7 @@ for i in range(70):
             body += random.choice(rq_pool) + "\n\n"
     
     body += "Evidence links:\n" + links_text + "\n\n"
-    closing = [
-        "I am trusting that someone at Telegram will read this and take action. The women affected by this channel deserve nothing less.",
-        "I truly hope this email reaches a human being who understands the urgency. Please do not let this disappear into another automated response.",
-        "Every day that passes without action is another day a woman suffers. Please act on this before it is too late.",
-        "I have done everything I can to document this. Now it is in your hands. Please do the right thing.",
-        "If you take one thing from this email let it be this: real women are being destroyed and you have the power to stop it.",
-        "This is not just a report. It is a plea from someone who has seen the damage and cannot look away.",
-        "I will continue to report this channel until action is taken. I am asking you to please make this the last time I have to write.",
-        "The evidence speaks for itself. I am asking you to listen to it.",
-        "I am leaving this in your hands now. Please prove to me that Telegram still cares about its users.",
-        "The women in these photos trusted someone. That trust was betrayed. Please restore what little faith they have left in humanity.",
-        "I know your team receives thousands of reports. This one is different. A woman deleted her entire account out of fear. Please act.",
-        "I have spent hours gathering this evidence. Please spend five minutes reviewing it. That is all I am asking.",
-        "Someone at Telegram must review this. I am not going to stop until someone does.",
-        "This cannot continue. I will be following up on this report regularly until I see action.",
-        "Please do the right thing. The women who were targeted by this channel are counting on you.",
-    ]
-    body += random.choice(closing)
+    body += closings[i % len(closings)]
     
     reports.append({"id": i + 1, "subject": subjects[i], "body": body.strip()})
 
@@ -373,3 +410,7 @@ print(f"\nViolation distribution:")
 for v, c in violation_counter.most_common():
     print(f"  {v}: {c}/70 reports")
 print(f"\nSample: {reports[0]['subject']}")
+
+with open("/data/telegram_abuse_reports_yegan/reports.json", "w", encoding="utf-8") as f:
+    json.dump(reports, f, ensure_ascii=False, indent=2)
+print(f"\nSaved to reports.json")
