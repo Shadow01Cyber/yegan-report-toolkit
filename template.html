@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Report @YeganHjAmir</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#c9d1d9;font-family:monospace;padding:20px}
+h1{color:#f0883e;margin-bottom:10px;font-size:1.3em}
+.info{background:#161b22;border:1px solid #f0883e;border-radius:8px;padding:15px;margin-bottom:20px}
+.info span{color:#f0883e;font-weight:bold}
+.btn{display:inline-block;padding:10px 20px;border-radius:6px;border:none;font-family:monospace;font-size:14px;cursor:pointer;margin:5px;font-weight:bold}
+.send{background:#238636;color:#fff}
+.send:hover{background:#2ea043}
+.skip{background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+.copy{background:#1f6feb;color:#fff}
+.copy:hover{background:#388bfd}
+.progress{background:#161b22;border-radius:8px;padding:10px 15px;margin-bottom:15px;border:1px solid #30363d}
+.bar{height:8px;background:#21262d;border-radius:4px;margin-top:8px;overflow:hidden}
+.fill{height:100%;background:#f0883e;border-radius:4px;transition:width .3s}
+.subject{background:#161b22;padding:12px;border-radius:6px;border:1px solid #30363d;margin:10px 0;font-size:13px}
+.body{background:#0d1117;padding:15px;border-radius:6px;border:1px solid #30363d;margin:10px 0;max-height:400px;overflow-y:auto;font-size:13px;line-height:1.6;white-space:pre-wrap}
+.to{color:#58a6ff}
+.sent-list{max-height:200px;overflow-y:auto;margin-top:10px}
+.sent-item{color:#8b949e;font-size:11px;padding:2px 0}
+.badge{display:inline-block;background:#da3633;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:5px}
+</style>
+</head>
+<body>
+
+<h1>🔓 Report @YeganHjAmir</h1>
+
+<div class="info">
+<b>Channel:</b> <span>@YeganHjAmir</span> (ID: <span>-1002800797699</span>)<br>
+<b>Owner:</b> <span>@ip_1998</span><br>
+<b>Violation:</b> Non-consensual intimate images + verbal abuse + fake members (5k)<br>
+<b>Evidence:</b> 7 links provided
+</div>
+
+<div class="to" style="margin-bottom:10px">
+<b>Send to:</b> abuse@telegram.org | grievance-in@telegram.org | durov@telegram.org | dsa.telegram@edsr.eu
+</div>
+
+<div class="progress">
+Sent: <span id="sent-count">0</span> / 70 <span class="badge" id="badge"></span>
+<div class="bar"><div class="fill" id="progress-fill"></div></div>
+</div>
+
+<div id="subject" class="subject"></div>
+<div id="email-body" class="body"></div>
+
+<div style="margin-top:15px;text-align:center">
+<button class="btn send" onclick="sendReport()">📤 Send via Gmail</button>
+<button class="btn copy" onclick="copyReport()">📋 Copy</button>
+<button class="btn skip" onclick="skipReport()">⏭ Skip</button>
+<button class="btn send" onclick="sendAll()">📨 Send All</button>
+</div>
+
+<div class="sent-list" id="sent-list"></div>
+
+<script>
+const REPORTS = REPORTS_PLACEHOLDER;
+let current = 0;
+let sent = JSON.parse(localStorage.getItem('yegan_sent') || '[]');
+
+function pickNext() {
+    for (let i = 0; i < REPORTS.length; i++) {
+        if (!sent.includes(REPORTS[i].id)) return REPORTS[i];
+    }
+    return null;
+}
+
+function showReport() {
+    const r = pickNext();
+    if (!r) {
+        document.getElementById('subject').textContent = 'All 70 reports sent!';
+        document.getElementById('email-body').textContent = 'Done. Check sent count above.';
+        document.getElementById('badge').textContent = 'DONE';
+        return;
+    }
+    current = r.id;
+    document.getElementById('subject').textContent = 'Subject: ' + r.subject;
+    document.getElementById('email-body').textContent = r.body;
+    updateProgress();
+}
+
+function sendReport() {
+    const r = REPORTS.find(x => x.id === current);
+    if (!r) return;
+    const body = encodeURIComponent(r.body);
+    const subject = encodeURIComponent(r.subject);
+    window.open(`mailto:abuse@telegram.org?subject=${subject}&body=${body}`, '_blank');
+    markSent(r.id);
+}
+
+function sendAll() {
+    const unsent = REPORTS.filter(r => !sent.includes(r.id));
+    if (unsent.length === 0) return;
+    const first = unsent[0];
+    const body = encodeURIComponent(first.body);
+    const subject = encodeURIComponent(first.subject);
+    window.open(`mailto:abuse@telegram.org?subject=${subject}&body=${body}`, '_blank');
+    markSent(first.id);
+}
+
+function copyReport() {
+    const r = REPORTS.find(x => x.id === current);
+    if (!r) return;
+    const text = 'To: abuse@telegram.org\nCC: grievance-in@telegram.org, durov@telegram.org, dsa.telegram@edsr.eu\nSubject: ' + r.subject + '\n\n' + r.body;
+    navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+}
+
+function skipReport() {
+    const r = REPORTS.find(x => x.id === current);
+    if (r) showReport();
+}
+
+function markSent(id) {
+    if (!sent.includes(id)) {
+        sent.push(id);
+        localStorage.setItem('yegan_sent', JSON.stringify(sent));
+    }
+    updateProgress();
+    showReport();
+}
+
+function updateProgress() {
+    const count = sent.length;
+    document.getElementById('sent-count').textContent = count;
+    document.getElementById('progress-fill').style.width = (count/70*100) + '%';
+    document.getElementById('badge').textContent = count + '/70';
+    const list = document.getElementById('sent-list');
+    list.innerHTML = sent.map(id => {
+        const r = REPORTS.find(x => x.id === id);
+        return r ? `<div class="sent-item">✅ #${r.id}: ${r.subject}</div>` : '';
+    }).join('');
+}
+
+showReport();
+</script>
+</body>
+</html>
