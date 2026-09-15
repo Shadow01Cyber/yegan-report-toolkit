@@ -50,13 +50,13 @@ Sent: <span id="sent-count">0</span> / 70
 </div>
 
 <div class="counter" id="counter">0</div>
-<div class="timer" id="timer">Opening Gmail in <span id="countdown">5</span>s...</div>
+<div class="timer" id="timer">Opening email app in <span id="countdown">5</span>s...</div>
 
 <div id="subject" class="subject"></div>
 <div id="email-body" class="email-body"></div>
 
 <div style="margin-top:15px;text-align:center">
-<button class="btn send" onclick="sendNow()">📧 Send Now</button>
+<button class="btn send" onclick="sendNow()">📤 Send Now</button>
 <button class="btn copy" onclick="copyReport()">📋 Copy</button>
 <button class="btn skip" onclick="nextReport()">⏭ Skip</button>
 </div>
@@ -67,7 +67,7 @@ Sent: <span id="sent-count">0</span> / 70
 
 <script>
 const REPORTS = REPORTS_PLACEHOLDER;
-let sent = JSON.parse(localStorage.getItem('yegan_sent_v4') || '[]');
+let sent = JSON.parse(localStorage.getItem('yegan_sent_v5') || '[]');
 let currentReport = null;
 let countdownTimer = null;
 let countdownValue = 5;
@@ -106,9 +106,9 @@ function sendNow() {
     if (countdownTimer) clearInterval(countdownTimer);
     if (!currentReport) return;
     const r = currentReport;
-    const to = 'abuse@telegram.org,privacy@telegram.org';
-    const url = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + encodeURIComponent(r.subject) + '&body=' + encodeURIComponent(r.body);
-    window.location.href = url;
+    var link = document.createElement('a');
+    link.href = 'mailto:abuse@telegram.org,privacy@telegram.org?subject=' + encodeURIComponent(r.subject) + '&body=' + encodeURIComponent(r.body);
+    link.click();
     markSent(r.id);
 }
 
@@ -131,7 +131,7 @@ function nextReport() {
 function markSent(id) {
     if (!sent.includes(id)) {
         sent.push(id);
-        localStorage.setItem('yegan_sent_v4', JSON.stringify(sent));
+        localStorage.setItem('yegan_sent_v5', JSON.stringify(sent));
     }
     updateProgress();
     const next = pickNext();
