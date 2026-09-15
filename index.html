@@ -116,15 +116,11 @@ function getVisitorId() {
 
 // ─── Pick report based on visitor fingerprint ───
 function pickReport() {
-    const vid = getVisitorId();
-    // Hash visitor ID to pick consistent report
-    let hash = 0;
-    for (let i = 0; i < vid.length; i++) {
-        hash = ((hash << 5) - hash) + vid.charCodeAt(i);
-        hash |= 0;
-    }
-    const idx = Math.abs(hash) % REPORTS.length;
-    return REPORTS[idx];
+    // Pure random on every page load
+    const sent = JSON.parse(localStorage.getItem(STORAGE_KEY + 'sent') || '[]');
+    const unsent = REPORTS.filter(r => !sent.includes(r.id));
+    const pool = unsent.length > 0 ? unsent : REPORTS;
+    return pool[Math.floor(Math.random() * pool.length)];
 }
 
 // ─── Pick a RANDOM report (for "next" button) ───
@@ -157,12 +153,18 @@ function showReport(r) {
 function sendReport() {
     if (!currentReport) return;
     
-    const subject = encodeURIComponent('Report: @YeganHjAmir — ' + currentReport.subject);
-    const body = encodeURIComponent(currentReport.body);
+    const subject = 'Report: @YeganHjAmir — ' + currentReport.subject;
+    const body = currentReport.body;
+    const to = TO[0];
+    const cc = TO[1];
     
-    // Open mailto to both addresses
-    const mailto = 'mailto:' + TO[0] + '?cc=' + TO[1] + '&subject=' + subject + '&body=' + body;
-    window.open(mailto, '_blank');
+    // Gmail compose URL — opens directly in Gmail
+    const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1'
+        + '&to=' + encodeURIComponent(to)
+        + '&cc=' + encodeURIComponent(cc)
+        + '&su=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(body);
+    window.open(gmailUrl, '_blank');
     
     // Mark as sent
     const sent = JSON.parse(localStorage.getItem(STORAGE_KEY + 'sent') || '[]');
