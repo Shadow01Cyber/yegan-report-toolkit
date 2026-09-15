@@ -50,7 +50,7 @@ Sent: <span id="sent-count">0</span> / 70
 </div>
 
 <div class="counter" id="counter">0</div>
-<div class="timer" id="timer">Opening email app in <span id="countdown">5</span>s...</div>
+<div class="timer" id="timer">Opening email in <span id="countdown">5</span>s...</div>
 
 <div id="subject" class="subject"></div>
 <div id="email-body" class="email-body"></div>
@@ -67,7 +67,7 @@ Sent: <span id="sent-count">0</span> / 70
 
 <script>
 const REPORTS = REPORTS_PLACEHOLDER;
-let sent = JSON.parse(localStorage.getItem('yegan_sent_v5') || '[]');
+let sent = JSON.parse(localStorage.getItem('yegan_sent_v6') || '[]');
 let currentReport = null;
 let countdownTimer = null;
 let countdownValue = 5;
@@ -105,18 +105,19 @@ function startCountdown() {
 function sendNow() {
     if (countdownTimer) clearInterval(countdownTimer);
     if (!currentReport) return;
-    const r = currentReport;
-    var link = document.createElement('a');
-    link.href = 'mailto:abuse@telegram.org,privacy@telegram.org?subject=' + encodeURIComponent(r.subject) + '&body=' + encodeURIComponent(r.body);
-    link.click();
+    var r = currentReport;
+    var to = 'abuse@telegram.org,privacy@telegram.org';
+    var subj = encodeURIComponent(r.subject);
+    var body = encodeURIComponent(r.body);
+    window.location = 'mailto:' + to + '?subject=' + subj + '&body=' + body;
     markSent(r.id);
 }
 
 function copyReport() {
     if (!currentReport) return;
-    const r = currentReport;
-    const text = 'To: abuse@telegram.org, privacy@telegram.org\nSubject: ' + r.subject + '\n\n' + r.body;
-    navigator.clipboard.writeText(text).then(() => {
+    var r = currentReport;
+    var text = 'To: abuse@telegram.org, privacy@telegram.org\nSubject: ' + r.subject + '\n\n' + r.body;
+    navigator.clipboard.writeText(text).then(function() {
         alert('✅ Copied! Paste into Gmail.');
     });
 }
@@ -131,10 +132,10 @@ function nextReport() {
 function markSent(id) {
     if (!sent.includes(id)) {
         sent.push(id);
-        localStorage.setItem('yegan_sent_v5', JSON.stringify(sent));
+        localStorage.setItem('yegan_sent_v6', JSON.stringify(sent));
     }
     updateProgress();
-    const next = pickNext();
+    var next = pickNext();
     if (next) {
         showReport(next);
     } else {
@@ -147,18 +148,17 @@ function markSent(id) {
 }
 
 function updateProgress() {
-    const count = sent.length;
+    var count = sent.length;
     document.getElementById('sent-count').textContent = count;
     document.getElementById('progress-fill').style.width = (count/70*100) + '%';
-    const log = document.getElementById('sent-log');
-    log.innerHTML = sent.slice().reverse().map(id => {
-        const r = REPORTS.find(x => x.id === id);
+    var log = document.getElementById('sent-log');
+    log.innerHTML = sent.slice().reverse().map(function(id) {
+        var r = REPORTS.find(function(x) { return x.id === id; });
         return r ? '<div class="sent-item">✅ #' + r.id + ': ' + r.subject.substring(0,50) + '...</div>' : '';
     }).join('');
 }
 
-// Start
-const first = pickNext();
+var first = pickNext();
 if (first) showReport(first);
 else {
     document.getElementById('subject').textContent = '✅ ALL SENT';
