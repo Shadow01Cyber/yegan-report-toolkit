@@ -5,7 +5,7 @@ random.seed(42)
 CID = "-1002800797699"
 CN = "@YeganHjAmir"
 OW = "@ip_1998"
-LINKS = ["https://t.me/YeganHjAmir/496","https://t.me/YeganHjAmir/443","https://t.me/YeganHjAmir/444","https://t.me/YeganHjAmir/515","https://t.me/YeganHjAmir/501","https://t.me/YeganHjAmir/490","https://t.me/YeganHjAmir/482","https://t.me/YeganHjAmir/474"]
+LINKS = ["https://t.me/YeganHjAmir/496","https://t.me/YeganHjAmir/443","https://t.me/YeganHjAmir/444","https://t.me/YeganHjAmir/515","https://t.me/YeganHjAmir/501","https://t.me/YeganHjAmir/490","https://t.me/YeganHjAmir/482","https://t.me/YeganHjAmir/474","https://t.me/YeganHjAmir/539"]
 
 subjects = [
 "URGENT: A woman deleted her account because you failed to protect her",
@@ -217,6 +217,11 @@ violations = [
     "The subscriber count was artificially boosted with roughly 5000 fake accounts to maximize psychological pressure on every victim.",
     "5000 fake members were purchased to create an illusion of massive viewership terrorizing each victim.",
     "The operator deliberately inflated the channel using 5000 fake accounts to amplify the terror experienced by each victim.",
+    "The operator is engaged in active BLACKMAIL and EXTORTION of women. He threatens to publish intimate photos unless victims comply with his demands. Evidence at https://t.me/YeganHjAmir/539.",
+    "This channel is not just publishing photos. It is running a BLACKMAIL operation. Women are being extorted with their own intimate images. See https://t.me/YeganHjAmir/539.",
+    "The operator uses stolen intimate photos as LEVERAGE for EXTORTION. Women are trapped in a cycle of blackmail because your platform allows this channel to exist. https://t.me/YeganHjAmir/539.",
+    "BLACKMAIL is happening on your platform right now. The operator threatens women with publication of intimate images unless they comply. This is a CRIMINAL OPERATION. https://t.me/YeganHjAmir/539.",
+    "The operator has created a SYSTEM OF EXTORTION. Women pay or their intimate photos get published. This is not content moderation. This is organized crime. https://t.me/YeganHjAmir/539.",
 ]
 
 closings = [
