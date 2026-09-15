@@ -65,7 +65,7 @@ header .badge{display:inline-block;background:#238636;color:#fff;padding:4px 12p
 
     <div class="timer-box" id="timerArea">
         <div class="big" id="countdown">5</div>
-        <div class="sub">Opening Gmail in <span id="countdownText">5</span>s — <a href="#" id="directLink" style="color:#f0883e;text-decoration:underline;display:none">or click here to open now</a></div>
+        <div class="sub">Opening email in <span id="countdownText">5</span>s — <a href="#" id="directLink" style="color:#f0883e;text-decoration:underline;display:none">or click here to open email app</a></div>
     </div>
 
     <div class="progress-box">
@@ -100,11 +100,10 @@ let countdownTimer = null;
 let countdownValue = 5;
 let gmailOpened = false;
 
-function buildGmailUrl(r) {
-    return 'https://mail.google.com/mail/?view=cm&fs=1'
-        + '&to=' + encodeURIComponent(TO[0])
-        + '&cc=' + encodeURIComponent(TO[1])
-        + '&su=' + encodeURIComponent('Report: @YeganHjAmir — ' + r.subject)
+function buildMailtoUrl(r) {
+    return 'mailto:' + encodeURIComponent(TO[0])
+        + '?cc=' + encodeURIComponent(TO[1])
+        + '&subject=' + encodeURIComponent('Report: @YeganHjAmir — ' + r.subject)
         + '&body=' + encodeURIComponent(r.body);
 }
 
@@ -127,7 +126,7 @@ function showReport(r) {
     document.getElementById('progressFill').style.width = ((sent.length / REPORTS.length) * 100) + '%';
 
     // Set direct link
-    const url = buildGmailUrl(r);
+    const url = buildMailtoUrl(r);
     const link = document.getElementById('directLink');
     link.href = url;
     link.style.display = 'inline';
@@ -158,14 +157,14 @@ function startCountdown() {
 function openGmail() {
     if (gmailOpened || !currentReport) return;
     gmailOpened = true;
-    const url = buildGmailUrl(currentReport);
+    const url = buildMailtoUrl(currentReport);
 
     // Try popup
     const w = window.open(url, '_blank');
     if (!w || w.closed || typeof w.closed === 'undefined') {
-        showToast('⚠️ Popup blocked — click the link below');
+        showToast('⚠️ Popup blocked — use the link below');
     } else {
-        showToast('✅ Opening Gmail...');
+        showToast('✅ Opening email...');
     }
     markSent();
 }
