@@ -27,6 +27,7 @@ h1{color:#f0883e;margin-bottom:10px;font-size:1.3em}
 .timer{color:#8b949e;font-size:12px;text-align:center;margin-top:5px}
 .sent-log{max-height:150px;overflow-y:auto;margin-top:15px;border-top:1px solid #30363d;padding-top:10px}
 .sent-item{color:#8b949e;font-size:11px;padding:2px 0}
+.done{color:#3fb950;font-size:1.5em;text-align:center;margin:30px 0}
 </style>
 </head>
 <body>
@@ -55,16 +56,18 @@ Sent: <span id="sent-count">0</span> / 70
 <div id="email-body" class="email-body"></div>
 
 <div style="margin-top:15px;text-align:center">
-<button class="btn send" onclick="sendNow()">📤 Send Now</button>
+<button class="btn send" onclick="sendNow()">📧 Send Now</button>
 <button class="btn copy" onclick="copyReport()">📋 Copy</button>
 <button class="btn skip" onclick="nextReport()">⏭ Skip</button>
 </div>
 
 <div class="sent-log" id="sent-log"></div>
 
+<div id="done-msg" class="done" style="display:none">✅ ALL 70 REPORTS SENT!</div>
+
 <script>
 const REPORTS = REPORTS_PLACEHOLDER;
-let sent = JSON.parse(localStorage.getItem('yegan_sent_v3') || '[]');
+let sent = JSON.parse(localStorage.getItem('yegan_sent_v4') || '[]');
 let currentReport = null;
 let countdownTimer = null;
 let countdownValue = 5;
@@ -80,6 +83,8 @@ function showReport(r) {
     document.getElementById('subject').textContent = 'Subject: ' + r.subject;
     document.getElementById('email-body').textContent = r.body;
     document.getElementById('counter').textContent = (sent.length + 1);
+    document.getElementById('timer').style.display = '';
+    document.getElementById('done-msg').style.display = 'none';
     startCountdown();
 }
 
@@ -102,8 +107,8 @@ function sendNow() {
     if (!currentReport) return;
     const r = currentReport;
     const to = 'abuse@telegram.org,privacy@telegram.org';
-    const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(r.subject)}&body=${encodeURIComponent(r.body)}`;
-    window.open(url, '_blank');
+    const url = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + encodeURIComponent(r.subject) + '&body=' + encodeURIComponent(r.body);
+    window.location.href = url;
     markSent(r.id);
 }
 
@@ -126,7 +131,7 @@ function nextReport() {
 function markSent(id) {
     if (!sent.includes(id)) {
         sent.push(id);
-        localStorage.setItem('yegan_sent_v3', JSON.stringify(sent));
+        localStorage.setItem('yegan_sent_v4', JSON.stringify(sent));
     }
     updateProgress();
     const next = pickNext();
@@ -135,8 +140,9 @@ function markSent(id) {
     } else {
         document.getElementById('subject').textContent = '✅ ALL 70 REPORTS SENT';
         document.getElementById('email-body').textContent = 'Done! All reports have been sent.';
-        document.getElementById('timer').textContent = 'Complete';
+        document.getElementById('timer').style.display = 'none';
         document.getElementById('counter').textContent = '70';
+        document.getElementById('done-msg').style.display = 'block';
     }
 }
 
@@ -147,7 +153,7 @@ function updateProgress() {
     const log = document.getElementById('sent-log');
     log.innerHTML = sent.slice().reverse().map(id => {
         const r = REPORTS.find(x => x.id === id);
-        return r ? `<div class="sent-item">✅ #${r.id}: ${r.subject.substring(0,50)}...</div>` : '';
+        return r ? '<div class="sent-item">✅ #' + r.id + ': ' + r.subject.substring(0,50) + '...</div>' : '';
     }).join('');
 }
 
@@ -156,7 +162,8 @@ const first = pickNext();
 if (first) showReport(first);
 else {
     document.getElementById('subject').textContent = '✅ ALL SENT';
-    document.getElementById('timer').textContent = 'Complete';
+    document.getElementById('timer').style.display = 'none';
+    document.getElementById('done-msg').style.display = 'block';
 }
 </script>
 </body>
